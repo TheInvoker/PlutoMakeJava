@@ -51,6 +51,7 @@ public class PlutoMake {
         
         
         ExecutorService es = Executors.newCachedThreadPool();
+        //ExecutorService es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
 
         // loop through all active templates
