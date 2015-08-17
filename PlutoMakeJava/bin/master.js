@@ -9,7 +9,7 @@
 		"transformer" : "bilinear",
 		"filter" : "darken",
 		"mask" : "",
-		"active" : false,
+		"active" : true,
 		"extra" : [
 		],
 		"x" : 488,
@@ -25,7 +25,7 @@
 		"mapping" : "template/bump1/mapping.txt",
 		"metadata" : "template/bump1/metadata.txt",
 		"transformer" : "bilinear",
-		"filter" : "vividlight",
+		"filter" : "none",
 		"mask" : "",
 		"active" : true,
 		"extra" : [
@@ -45,7 +45,7 @@
 		"transformer" : "bilinear",
 		"filter" : "darken",
 		"mask" : "template/coaster1/mask.png",
-		"active" : false,
+		"active" : true,
 		"extra" : [
 		],
 		"x" : 655,
@@ -63,7 +63,7 @@
 		"transformer" : "1.5orderpoly",
 		"filter" : "darken",
 		"mask" : "",
-		"active" : false,
+		"active" : true,
 		"extra" : [
 		],
 		"x" : 605,

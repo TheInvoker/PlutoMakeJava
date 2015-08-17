@@ -5,6 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,15 +21,17 @@ public class PlutoMake {
 	
 	public static String classDir;
 	
-	public static void main(String[] args) throws JSONException, IOException {
+	public static void main(String[] args) throws JSONException, IOException, InterruptedException {
+		
 		// determine path to the class file, I will use it as current directory
 		String classDirFile = PlutoMake.class.getResource("PlutoMake.class").getPath();
 		classDir = classDirFile.substring(0, classDirFile.lastIndexOf("/") + 1);
 		
 		// get the input arguments
-		String logoPath, filename;
+		final String logoPath;
+		final String filename;
 		if (args.length < 2) {
-			 logoPath = classDir + "test.jpg";
+			 logoPath = classDir + "tests/android.png";
 			 filename = "result.png";
 		} else {
 			 logoPath = args[0];
@@ -43,28 +48,51 @@ public class PlutoMake {
         String text = readFile(classDir + "master.js");
         JSONArray files = new JSONArray(text);
         
+        
+        
+        ExecutorService es = Executors.newCachedThreadPool();
+
+
         // loop through all active templates
         int len = files.length();
         for(int i=0; i<len; i+=1)
         {
-        	JSONObject template = files.getJSONObject(i);
+        	final JSONObject template = files.getJSONObject(i);
             if (template.getBoolean("active"))
             {
-                BatchGenerateResult(
-            		logoPath, 
-            		template.getString("template"), 
-            		template.getString("mapping"), 
-            		template.getString("metadata"), 
-    				template.getString("result") + filename, 
-					template.getString("filter"), 
-					template.getString("mask"),
-            		template.getInt("x"), 
-            		template.getInt("y"), 
-            		template.getInt("w"),  
-            		template.getInt("h")
-            	);
+            	 es.execute(new Runnable() {
+					@Override
+					public void run() {
+		                try {
+							try {
+								BatchGenerateResult(
+									logoPath, 
+									template.getString("template"), 
+									template.getString("mapping"), 
+									template.getString("metadata"), 
+									template.getString("result") + filename, 
+									template.getString("filter"), 
+									template.getString("mask"),
+									template.getInt("x"), 
+									template.getInt("y"), 
+									template.getInt("w"),  
+									template.getInt("h")
+								);
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+            	 });
             }
         }
+        
+        es.shutdown();
+        boolean finshed = es.awaitTermination(2, TimeUnit.MINUTES);
 	}
 	
 	
