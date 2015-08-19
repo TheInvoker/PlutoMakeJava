@@ -43,31 +43,32 @@ public class PlutoMake {
         if(!logofile.exists() || logofile.isDirectory()) {
             System.exit(1);
         }
-	        
+        
         // get the master.js file
         String text = readFile(classDir + "master.js");
         JSONArray files = new JSONArray(text);
-        
-        
+       
+        // read the logo image
+    	final BufferedImage logoImage = ImageIO.read(new File(logoPath));
+
+
         
         ExecutorService es = Executors.newCachedThreadPool();
         //ExecutorService es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-
-
+        
+        
         // loop through all active templates
         int len = files.length();
-        for(int i=0; i<len; i+=1)
-        {
+        for(int i=0; i<len; i+=1) {
         	final JSONObject template = files.getJSONObject(i);
-            if (template.getBoolean("active"))
-            {
+            if (template.getBoolean("active")) {
             	 es.execute(new Runnable() {
 					@Override
 					public void run() {
 		                try {
 							try {
 								BatchGenerateResult(
-									logoPath, 
+									logoImage, 
 									template.getString("template"), 
 									template.getString("mapping"), 
 									template.getString("metadata"), 
@@ -80,11 +81,9 @@ public class PlutoMake {
 									template.getInt("h")
 								);
 							} catch (JSONException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
@@ -94,11 +93,13 @@ public class PlutoMake {
         
         es.shutdown();
         boolean finshed = es.awaitTermination(2, TimeUnit.MINUTES);
+        
+        logoImage.flush();
 	}
 	
 	
 	
-    private static void BatchGenerateResult(String logoPath, String templatePath, String mappingPath, String metadataPath, String resultPath, String filter, String maskPath, int x, int y, int w, int h) throws IOException, JSONException
+    private static void BatchGenerateResult(BufferedImage logoImage, String templatePath, String mappingPath, String metadataPath, String resultPath, String filter, String maskPath, int x, int y, int w, int h) throws IOException, JSONException
     {
         ColorFilter filterobj = null;
         if (filter.equals("none")) {
@@ -116,12 +117,31 @@ public class PlutoMake {
         
         Map<Point, Point> mapping = MyJSON.ReadMapping(classDir + mappingPath);
 
-        BufferedImage warpedimage = Exporter.GenerateWarpedLogo(logoPath, maskPath, mapping, metadata.getInt("width"), metadata.getInt("height"));
+        
+
+       
+        int lw = logoImage.getWidth();
+        int lh = logoImage.getHeight();
+        int gridw = metadata.getInt("width");
+        int gridh = metadata.getInt("height");
+        boolean resized = false;
+        if (lw != gridw || lh != gridh)
+        {
+        	logoImage = Exporter.ResizeImage(logoImage, gridw, gridh);
+        	resized = true;
+        }
+        
+        
+        BufferedImage warpedimage = Exporter.GenerateWarpedLogo(logoImage, maskPath, mapping);
         //ImageIO.write(warpedimage, "png", new FileOutputStream(classDir + "warpedlogo.png"));
         
         Exporter.StampLogo(templatePath, resultPath, x, y, w, h, warpedimage, filterobj);
 
+        
         warpedimage.flush();
+        if (resized) {
+        	logoImage.flush();
+        }
     }
     
     

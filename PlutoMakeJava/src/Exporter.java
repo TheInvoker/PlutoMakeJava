@@ -15,22 +15,9 @@ import Filter.ColorFilter;
 
 public class Exporter {
 	
-    public static BufferedImage GenerateWarpedLogo(String logoFilePath, String maskPath, Map<Point, Point> mapping, int width, int height) throws IOException
+    public static BufferedImage GenerateWarpedLogo(BufferedImage logoImage, String maskPath, Map<Point, Point> mapping) throws IOException
     {
-    	BufferedImage _logoImage = ImageIO.read(new File(logoFilePath));
-        int w = _logoImage.getWidth();
-        int h = _logoImage.getHeight();
-        
-        BufferedImage logoImage = _logoImage;
-        if (w != width || h != height)
-        {
-        	logoImage = ResizeImage(_logoImage, width, height);
-        	_logoImage.flush();
-            w = logoImage.getWidth();
-            h = logoImage.getHeight();
-        }
-        
-        BufferedImage flag = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage flag = new BufferedImage(logoImage.getWidth(), logoImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
         
         BufferedImage maskImage = null;
         File maskfile = new File(PlutoMake.classDir + maskPath);
@@ -116,7 +103,7 @@ public class Exporter {
         templateImage.flush();
     }
 
-    private static BufferedImage ResizeImage(BufferedImage originalImage, int newWidth, int newHeight){
+    public static BufferedImage ResizeImage(BufferedImage originalImage, int newWidth, int newHeight){
 		
 		BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = resizedImage.createGraphics();
