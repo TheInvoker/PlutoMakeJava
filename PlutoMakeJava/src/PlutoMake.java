@@ -17,21 +17,24 @@ public class PlutoMake {
 	
 	public static String classDir;
 	
-	public static void main(String[] args) throws JSONException, IOException, InterruptedException {
+	public static void main(String[] args) throws JSONException, IOException {
 		
 		// determine path to the class file, I will use it as current directory
 		String classDirFile = PlutoMake.class.getResource("PlutoMake.class").getPath();
 		classDir = classDirFile.substring(0, classDirFile.lastIndexOf("/") + 1);
 		
 		// get the input arguments
-		final String logoPath;
-		final String filename;
-		if (args.length < 2) {
+		String logoPath;
+		String filename;
+		String templateName;
+		if (args.length < 3) {
 			 logoPath = classDir + "tests/android.png";
 			 filename = "result.png";
+			 templateName = "coaster1";
 		} else {
 			 logoPath = args[0];
 			 filename = args[1];
+			 templateName = args[2];
 		}
         
 		// make sure the logo image exists
@@ -45,54 +48,64 @@ public class PlutoMake {
         JSONArray files = new JSONArray(text);
        
         // read the logo image
-    	final BufferedImage logoImage = ImageIO.read(new File(logoPath));
-
-
-        
-        //ExecutorService es = Executors.newCachedThreadPool();
-        //ExecutorService es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        
-        
-        // loop through all active templates
-        int len = files.length();
-        for(int i=0; i<len; i+=1) {
-        	final JSONObject template = files.getJSONObject(i);
-            if (template.getBoolean("active")) {
-            	 //es.execute(new Runnable() {
-					//@Override
-					//public void run() {
-		                try {
-							try {
-								BatchGenerateResult(
-									logoImage, 
-									template.getString("template"), 
-									template.getString("mapping"), 
-									template.getString("metadata"), 
-									template.getString("result") + filename, 
-									template.getString("filter"), 
-									template.getString("mask"),
-									template.getInt("x"), 
-									template.getInt("y"), 
-									template.getInt("w"),  
-									template.getInt("h")
-								);
-							} catch (JSONException e) {
-								e.printStackTrace();
-							}
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					//}
-            	 //});
-            }
-        }
-        
-        //es.shutdown();
-        //boolean finshed = es.awaitTermination(2, TimeUnit.MINUTES);
-        
+    	BufferedImage logoImage = ImageIO.read(new File(logoPath));
+    	boolean worked = Process(files, templateName, filename, logoImage);
         logoImage.flush();
+        
+        if (!worked) {
+        	System.exit(1);
+        }
 	}
 	
+	private static boolean Process(JSONArray files, String templateName, String filename, BufferedImage logoImage) throws JSONException {
+        
+		// loop through all active templates
+		JSONArray templatelist;
+		JSONObject template;
+		String templatePath, curTemplateName;
+		
+        int len = files.length();
+        for(int i=0; i<len; i+=1) {
+        	templatelist = files.getJSONArray(i);
+        	int len2 = templatelist.length();
+        	for(int j=0; j<len2; j+=1) {
+	        	template = templatelist.getJSONObject(j);
+	        	
+	        	templatePath = template.getString("template");
+	        	curTemplateName = templatePath.split("/")[1];
+	        	
+	        	if (!curTemplateName.equals(templateName)) {
+	        		continue;
+	        	}
+	        	
+	            if (template.getBoolean("active")) {
+					try {
+						BatchGenerateResult(
+							logoImage, 
+							templatePath, 
+							template.getString("mapping"), 
+							template.getString("metadata"), 
+							template.getString("result") + filename, 
+							template.getString("filter"), 
+							template.getString("mask"),
+							template.getInt("x"), 
+							template.getInt("y"), 
+							template.getInt("w"),  
+							template.getInt("h")
+						);
+					} catch (JSONException e) {
+						e.printStackTrace();
+						return false;
+					} catch (IOException e) {
+						e.printStackTrace();
+						return false;
+					}
+	                return true;
+	            }
+        	}
+        }
+        return false;
+	}
 	
 	
     private static void BatchGenerateResult(BufferedImage logoImage, String templatePath, String mappingPath, String metadataPath, String resultPath, String filter, String maskPath, int x, int y, int w, int h) throws IOException, JSONException
