@@ -16,23 +16,23 @@ public class MyJSON {
 
     	try {
     	    String finalstring = br.readLine();
-    	    Pattern rx = Pattern.compile("(x?\\d+)");
+    	    Pattern rx = Pattern.compile("x?\\d+");
             Matcher m = rx.matcher(finalstring);
             
-            int width = -1;
             int x = 0, y = 0;
             int[] xy;
+            String val;
+            
+            m.find();
+            val = m.group(0).toString();
+            int width = cantor_pair_reverse(Integer.parseInt(val))[0];
             
             while (m.find()) {
-                String val = m.group(0).toString();
+                val = m.group(0).toString();
                 
-                if (width == -1) {
-                	xy = cantor_pair_reverse(Integer.parseInt(val));
-                    width = xy[0];
-                } else if (val.charAt(0)=='x') {
-                    int commalength = Integer.parseInt(val.substring(1));
+                if (val.charAt(0)=='x') {
                     int curentIndex = width * y + x;
-                    int newIndex = curentIndex + commalength;
+                    int newIndex = curentIndex + Integer.parseInt(val.substring(1));
                     y = newIndex / width;
                     x = newIndex - (width * y);
                 } else

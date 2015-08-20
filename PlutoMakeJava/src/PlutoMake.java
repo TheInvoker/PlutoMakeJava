@@ -2,12 +2,8 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,7 +49,7 @@ public class PlutoMake {
 
 
         
-        ExecutorService es = Executors.newCachedThreadPool();
+        //ExecutorService es = Executors.newCachedThreadPool();
         //ExecutorService es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         
         
@@ -62,9 +58,9 @@ public class PlutoMake {
         for(int i=0; i<len; i+=1) {
         	final JSONObject template = files.getJSONObject(i);
             if (template.getBoolean("active")) {
-            	 es.execute(new Runnable() {
-					@Override
-					public void run() {
+            	 //es.execute(new Runnable() {
+					//@Override
+					//public void run() {
 		                try {
 							try {
 								BatchGenerateResult(
@@ -86,13 +82,13 @@ public class PlutoMake {
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
-					}
-            	 });
+					//}
+            	 //});
             }
         }
         
-        es.shutdown();
-        boolean finshed = es.awaitTermination(2, TimeUnit.MINUTES);
+        //es.shutdown();
+        //boolean finshed = es.awaitTermination(2, TimeUnit.MINUTES);
         
         logoImage.flush();
 	}
