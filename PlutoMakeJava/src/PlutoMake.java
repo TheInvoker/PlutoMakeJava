@@ -60,48 +60,48 @@ public class PlutoMake {
 	private static boolean Process(JSONArray files, String templateName, String filename, BufferedImage logoImage) throws JSONException {
         
 		// loop through all active templates
+		JSONObject templatelistobj;
 		JSONArray templatelist;
 		JSONObject template;
-		String templatePath, curTemplateName;
+		String curTemplateName;
 		
         int len = files.length();
         for(int i=0; i<len; i+=1) {
-        	templatelist = files.getJSONArray(i);
-        	int len2 = templatelist.length();
-        	for(int j=0; j<len2; j+=1) {
-	        	template = templatelist.getJSONObject(j);
-	        	
-	        	templatePath = template.getString("template");
-	        	curTemplateName = templatePath.split("/")[1];
-	        	
-	        	if (!curTemplateName.equals(templateName)) {
-	        		continue;
+        	templatelistobj = files.getJSONObject(i);
+        	curTemplateName = templatelistobj.getString("id");
+        	
+        	if (curTemplateName.equals(templateName)) {
+        		templatelist = templatelistobj.getJSONArray("angles");
+        		
+	        	int len2 = templatelist.length();
+	        	for(int j=0; j<len2; j+=1) {
+		        	template = templatelist.getJSONObject(j);
+		        	
+		            if (template.getBoolean("active")) {
+						try {
+							BatchGenerateResult(
+								logoImage, 
+								template.getString("template"), 
+								template.getString("mapping"), 
+								template.getString("metadata"), 
+								template.getString("result") + filename, 
+								template.getString("filter"), 
+								template.getString("mask"),
+								template.getInt("x"), 
+								template.getInt("y"), 
+								template.getInt("w"),  
+								template.getInt("h")
+							);
+						} catch (JSONException e) {
+							e.printStackTrace();
+							return false;
+						} catch (IOException e) {
+							e.printStackTrace();
+							return false;
+						}
+		                return true;
+		            }
 	        	}
-	        	
-	            if (template.getBoolean("active")) {
-					try {
-						BatchGenerateResult(
-							logoImage, 
-							templatePath, 
-							template.getString("mapping"), 
-							template.getString("metadata"), 
-							template.getString("result") + filename, 
-							template.getString("filter"), 
-							template.getString("mask"),
-							template.getInt("x"), 
-							template.getInt("y"), 
-							template.getInt("w"),  
-							template.getInt("h")
-						);
-					} catch (JSONException e) {
-						e.printStackTrace();
-						return false;
-					} catch (IOException e) {
-						e.printStackTrace();
-						return false;
-					}
-	                return true;
-	            }
         	}
         }
         return false;
