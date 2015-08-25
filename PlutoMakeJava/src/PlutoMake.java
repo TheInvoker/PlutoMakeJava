@@ -1,6 +1,5 @@
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.io.Console;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -14,7 +13,7 @@ import Filter.Darken;
 import Filter.NoFilter;
 import Filter.VividLight;
 
-public class PlutoMake {
+public final class PlutoMake {
 	
 	public static String classDir;
 	
@@ -58,7 +57,7 @@ public class PlutoMake {
         }
 	}
 	
-	private static boolean Process(JSONArray files, String templateName, String filename, BufferedImage logoImage) throws JSONException {
+	private final static boolean Process(JSONArray files, String templateName, String filename, BufferedImage logoImage) throws JSONException {
         
 		// loop through all active templates
 		JSONObject templatelistobj;
@@ -116,7 +115,7 @@ public class PlutoMake {
 	}
 	
 	
-    private static void BatchGenerateResult(BufferedImage logoImage, String templatePath, String mappingPath, String metadataPath, String resultPath, String filter, String maskPath, int x, int y, int w, int h) throws IOException, JSONException
+    private final static void BatchGenerateResult(BufferedImage logoImage, String templatePath, String mappingPath, String metadataPath, String resultPath, String filter, String maskPath, int x, int y, int w, int h) throws IOException, JSONException
     {
         ColorFilter filterobj = null;
         if (filter.equals("none")) {
@@ -162,7 +161,7 @@ public class PlutoMake {
     }
     
     
-    private static String readFile(String path) throws IOException {
+    private final static String readFile(String path) throws IOException {
         File file = new File(path);
         FileInputStream fis = new FileInputStream(file);
         byte[] data = new byte[(int) file.length()];

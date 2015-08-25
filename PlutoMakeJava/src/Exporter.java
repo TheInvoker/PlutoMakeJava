@@ -13,9 +13,9 @@ import javax.imageio.ImageIO;
 import Filter.ColorCalculate;
 import Filter.ColorFilter;
 
-public class Exporter {
+public final class Exporter {
 	
-    public static BufferedImage GenerateWarpedLogo(BufferedImage logoImage, String maskPath, Map<Point, Point> mapping) throws IOException
+    public final static BufferedImage GenerateWarpedLogo(BufferedImage logoImage, String maskPath, Map<Point, Point> mapping) throws IOException
     {
         BufferedImage flag = new BufferedImage(logoImage.getWidth(), logoImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
         
@@ -59,7 +59,7 @@ public class Exporter {
         return flag;
     }
 
-    public static void StampLogo(String templatePath, String outPath, int xStart, int yStart, int width, int height, BufferedImage logo, ColorFilter filter) throws IOException
+    public final static void StampLogo(String templatePath, String outPath, int xStart, int yStart, int width, int height, BufferedImage logo, ColorFilter filter) throws IOException
     {
     	BufferedImage templateImage = ImageIO.read(new File(PlutoMake.classDir + templatePath));
     	
@@ -103,7 +103,7 @@ public class Exporter {
         templateImage.flush();
     }
 
-    public static BufferedImage ResizeImage(BufferedImage originalImage, int newWidth, int newHeight){
+    public final static BufferedImage ResizeImage(BufferedImage originalImage, int newWidth, int newHeight){
 		
 		BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = resizedImage.createGraphics();
@@ -121,7 +121,7 @@ public class Exporter {
 		return resizedImage;
     }	
     
-	private static Color getColor(int pixel) {
+	private final static Color getColor(int pixel) {
 		int alpha = (pixel >> 24) & 0xff;
 		int red = (pixel >> 16) & 0xff;
 		int green = (pixel >> 8) & 0xff;

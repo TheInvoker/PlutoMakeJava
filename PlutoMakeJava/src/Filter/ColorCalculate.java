@@ -1,38 +1,37 @@
 package Filter;
 
-
 import java.awt.Color;
 
-public class ColorCalculate {
+public final class ColorCalculate {
 	
-    public static int Darken(int A, int B)
+    public final static int Darken(int A, int B)
     {
         return Math.min(A, B);
     }
 
-    public static int VividLight(int A, int B)
+    public final static int VividLight(int A, int B)
     {
         if (B >= 128)
         {
-            return ColorDodge(A, (2 * (B - 128)));
+            return ColorDodge(A, (B - 128) << 1); // * 2
         }
         else
         {
-            return ColorBurn(A, 2 * B);
+            return ColorBurn(A, B << 1); // * 2
         }
     }
 
-    public static int ColorDodge(int A, int B)
+    public final static int ColorDodge(int A, int B)
     {
         return ((B == 255) ? B : Math.min(255, ((A << 8) / (255 - B))));
     }
 
-    public static int ColorBurn(int A, int B)
+    public final static int ColorBurn(int A, int B)
     {
         return ((B == 0) ? B : Math.max(0, (255 - ((255 - A) << 8) / B)));
     }
 
-    public static Color Mix(Color B, Color A)
+    public final static Color Mix(Color B, Color A)
     {
         int rA = A.getRed();
         int gA = A.getGreen();

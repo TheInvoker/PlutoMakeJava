@@ -1,6 +1,5 @@
 package Filter;
 
-
 import java.awt.Color;
 
 public abstract interface ColorFilter

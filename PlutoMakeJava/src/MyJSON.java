@@ -9,9 +9,9 @@ import java.nio.channels.FileChannel;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MyJSON {
+public final class MyJSON {
 	
-    public static Map<Point, Point> ReadMapping(String mappingPath) throws IOException
+    public final static Map<Point, Point> ReadMapping(String mappingPath) throws IOException
     {
     	FileInputStream stream = new FileInputStream(mappingPath);
         File f = new File(mappingPath);
@@ -22,23 +22,25 @@ public class MyJSON {
         inChannel.close();
         stream.close();
         
-        int size = (int) f.length()/4;
-        int[] xy, result = new int[size];
+        int size = (int) f.length() >> 2;  // divide by 4
+        int[] xy = new int[2], result = new int[size];
 
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         IntBuffer intBuffer = buffer.asIntBuffer();
         intBuffer.get(result);
 
-        int i, x=0, y=0, width = cantor_pair_reverse(result[0])[0];
+        cantor_pair_reverse(result[0], xy);
+        int i, newIndex, x=0, y=0, width = xy[0];
+        
         Map<Point, Point> data = new HashMap<Point, Point>();
         
         for(i=1; i<size; i+=1) {
         	if (result[i] < 0) {
-                int newIndex = width * y + x - result[i];
+                newIndex = width * y + x - result[i];
                 y = newIndex / width;
                 x = newIndex - (width * y);
         	} else {
-            	xy = cantor_pair_reverse(result[i]);
+            	cantor_pair_reverse(result[i], xy);
                 data.put(new Point(x, y), new Point(xy[0], xy[1]));
                 x += 1;
                 if (x >= width)
@@ -55,11 +57,12 @@ public class MyJSON {
     /**
      * Return the source integers from a cantor pair integer.
      */
-    private static int[] cantor_pair_reverse(int z)
+    private final static void cantor_pair_reverse(int z, int[] xy)
     {
       int t = (int) Math.floor((-1 + Math.sqrt(1 + 8 * z))/2);
       int x = t * (t + 3) / 2 - z;
       int y = z - t * (t + 1) / 2;
-      return new int[] {x, y};
+      xy[0] = x;
+      xy[1] = y;
     }
 }
