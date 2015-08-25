@@ -2,7 +2,7 @@
 	{
 		"id" : "card1",
 		"title" : "Card",
-		"description" : "test description",
+		"description" : "test description test description test description test description test description test description test description test description test description test description test description test description test description test description test description test description test description test description test description test description",
 		"angles" : [
 			{
 				"grid" : "grid/multigrid.png",
@@ -37,7 +37,7 @@
 				"mapping" : "template/bump1/img1/mapping.txt",
 				"metadata" : "template/bump1/img1/metadata.txt",
 				"transformer" : "bilinear",
-				"filter" : "none",
+				"filter" : "vividlight",
 				"mask" : "",
 				"active" : true,
 				"extra" : [
@@ -46,31 +46,6 @@
 				"y" : 600,
 				"w" : 400,
 				"h" : 400
-			}
-		]
-	},
-	{
-		"id" : "coaster1",
-		"title" : "Coaster",
-		"description" : "test description",
-		"angles" : [
-			{
-				"grid" : "grid/plaingrid.png",
-				"warp" : "template/coaster1/img1/warp.png",
-				"template" : "template/coaster1/img1/coaster1.png",
-				"result" : "template/coaster1/img1/result/",
-				"mapping" : "template/coaster1/img1/mapping.txt",
-				"metadata" : "template/coaster1/img1/metadata.txt",
-				"transformer" : "bilinear",
-				"filter" : "darken",
-				"mask" : "template/coaster1/img1/mask.png",
-				"active" : true,
-				"extra" : [
-				],
-				"x" : 655,
-				"y" : 230,
-				"w" : 1000,
-				"h" : 1000
 			}
 		]
 	},
@@ -94,6 +69,31 @@
 				],
 				"x" : 605,
 				"y" : 391,
+				"w" : 1000,
+				"h" : 1000
+			}
+		]
+	},
+	{
+		"id" : "coaster1",
+		"title" : "Coaster",
+		"description" : "test description",
+		"angles" : [
+			{
+				"grid" : "grid/plaingrid.png",
+				"warp" : "template/coaster1/img1/warp.png",
+				"template" : "template/coaster1/img1/coaster1.png",
+				"result" : "template/coaster1/img1/result/",
+				"mapping" : "template/coaster1/img1/mapping.txt",
+				"metadata" : "template/coaster1/img1/metadata.txt",
+				"transformer" : "bilinear",
+				"filter" : "darken",
+				"mask" : "template/coaster1/img1/mask.png",
+				"active" : true,
+				"extra" : [
+				],
+				"x" : 655,
+				"y" : 230,
 				"w" : 1000,
 				"h" : 1000
 			}

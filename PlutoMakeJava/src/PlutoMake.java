@@ -1,5 +1,6 @@
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.Console;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -30,7 +31,7 @@ public class PlutoMake {
 		if (args.length < 3) {
 			 logoPath = classDir + "tests/android.png";
 			 filename = "result.png";
-			 templateName = "coaster1";
+			 templateName = "card1";
 		} else {
 			 logoPath = args[0];
 			 filename = args[1];
@@ -78,6 +79,7 @@ public class PlutoMake {
 		        	template = templatelist.getJSONObject(j);
 		        	
 		            if (template.getBoolean("active")) {
+		            	
 						try {
 							BatchGenerateResult(
 								logoImage, 
@@ -94,10 +96,16 @@ public class PlutoMake {
 							);
 						} catch (JSONException e) {
 							e.printStackTrace();
+							System.out.println(e.getMessage());
 							return false;
 						} catch (IOException e) {
 							e.printStackTrace();
+							System.out.println(e.getMessage());
 							return false;
+						} catch (Exception e) {
+							e.printStackTrace();
+							System.out.println(e.getMessage());
+							return false;	
 						}
 		                return true;
 		            }
