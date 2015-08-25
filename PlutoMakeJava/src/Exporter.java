@@ -63,8 +63,7 @@ public final class Exporter {
     {
     	BufferedImage templateImage = ImageIO.read(new File(PlutoMake.classDir + templatePath));
     	
-        int w = logo.getWidth();
-        int h = logo.getHeight();
+        int w = logo.getWidth(), h = logo.getHeight(), xs, ys;
 
         BufferedImage newLogo = null;
         if (w != width || h != height)
@@ -79,15 +78,14 @@ public final class Exporter {
         {
             for (int y = 0; y < h; y += 1)
             {
-                if (x + xStart < templateImage.getWidth() && y + yStart < templateImage.getHeight())
+                Color pixel = getColor(logo.getRGB(x, y));
+                if (pixel.getAlpha() != 0)
                 {
-                    Color pixel = getColor(logo.getRGB(x, y));
-                    if (pixel.getAlpha() != 0)
-                    {
-                        Color currentPixel = getColor(templateImage.getRGB(x + xStart, y + yStart));
-                        Color newColor = ColorCalculate.Mix(currentPixel, pixel);
-                        templateImage.setRGB(x + xStart, y + yStart, (filter.GetFilteredColor(currentPixel, newColor)).getRGB());
-                    }
+                	xs = xStart + x;
+                	ys = yStart + y;
+                    Color currentPixel = getColor(templateImage.getRGB(xs, ys));
+                    Color newColor = ColorCalculate.Mix(currentPixel, pixel);
+                    templateImage.setRGB(xs, ys, (filter.GetFilteredColor(currentPixel, newColor)).getRGB());
                 }
             }
         }
@@ -98,7 +96,6 @@ public final class Exporter {
         }
 
         ImageIO.write(templateImage, "png", new FileOutputStream(PlutoMake.classDir + outPath));
-        
         
         templateImage.flush();
     }
