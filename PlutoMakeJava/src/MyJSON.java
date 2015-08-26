@@ -56,10 +56,7 @@ public final class MyJSON {
             	cantor_pair_reverse(result[i], xy);
 
                 
-                
-                
-                
-               
+
                 Color pixel = Exporter.getColor(logoImage.getRGB(xy[0], xy[1]));
 
                 int newA = pixel.getAlpha();
