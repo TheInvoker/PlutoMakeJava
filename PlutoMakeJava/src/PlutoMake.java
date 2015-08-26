@@ -1,9 +1,7 @@
-import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Map;
 import javax.imageio.ImageIO;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,8 +36,7 @@ public final class PlutoMake {
 		}
         
 		// make sure the logo image exists
-        File logofile = new File(logoPath);
-        if(!logofile.exists() || logofile.isDirectory()) {
+        if(!isFile(new File(logoPath))) {
             System.exit(1);
         }
         
@@ -131,7 +128,7 @@ public final class PlutoMake {
         String text = readFile(classDir + metadataPath);
         JSONObject metadata = new JSONObject(text);
         
-        Map<Point, Point> mapping = MyJSON.ReadMapping(classDir + mappingPath);
+  
 
         
 
@@ -140,26 +137,34 @@ public final class PlutoMake {
         int lh = logoImage.getHeight();
         int gridw = metadata.getInt("width");
         int gridh = metadata.getInt("height");
-        boolean resized = false;
+
+        BufferedImage warpedimage;
+        
         if (lw != gridw || lh != gridh)
         {
-        	logoImage = Exporter.ResizeImage(logoImage, gridw, gridh);
-        	resized = true;
+        	BufferedImage newlogoImage = Exporter.ResizeImage(logoImage, gridw, gridh);
+        	logoImage.flush();
+
+        	warpedimage = MyJSON.GenerateWarpedLogo(newlogoImage, classDir + maskPath, classDir + mappingPath);
+        	newlogoImage.flush();
+        } else {
+        	
+        	warpedimage = MyJSON.GenerateWarpedLogo(logoImage, classDir + maskPath, classDir + mappingPath);
+        	logoImage.flush();
         }
         
-        
-        BufferedImage warpedimage = Exporter.GenerateWarpedLogo(logoImage, maskPath, mapping);
+     
         //ImageIO.write(warpedimage, "png", new FileOutputStream(classDir + "warpedlogo.png"));
         
         Exporter.StampLogo(templatePath, resultPath, x, y, w, h, warpedimage, filterobj);
 
         
         warpedimage.flush();
-        if (resized) {
-        	logoImage.flush();
-        }
     }
     
+    public final static Boolean isFile(File file) {
+    	return file.exists() && !file.isDirectory();
+    }
     
     private final static String readFile(String path) throws IOException {
         File file = new File(path);

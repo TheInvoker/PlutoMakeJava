@@ -1,4 +1,5 @@
-import java.awt.Point;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -6,13 +7,13 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.nio.channels.FileChannel;
-import java.util.HashMap;
-import java.util.Map;
+import javax.imageio.ImageIO;
 
 public final class MyJSON {
 	
-    public final static Map<Point, Point> ReadMapping(String mappingPath) throws IOException
+    public final static BufferedImage GenerateWarpedLogo(BufferedImage logoImage, String maskPath, String mappingPath) throws IOException
     {
+    	// reads the binary data into in[]
     	FileInputStream stream = new FileInputStream(mappingPath);
         File f = new File(mappingPath);
         
@@ -29,11 +30,23 @@ public final class MyJSON {
         IntBuffer intBuffer = buffer.asIntBuffer();
         intBuffer.get(result);
 
+        
+        // read width, height
         cantor_pair_reverse(result[0], xy);
         int i, newIndex, x=0, y=0, width = xy[0];
         
-        Map<Point, Point> data = new HashMap<Point, Point>();
+
+        // new warped logo
+        BufferedImage flag = new BufferedImage(logoImage.getWidth(), logoImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
         
+        // read mask if exists
+        BufferedImage maskImage = null;
+        if (PlutoMake.isFile(new File(maskPath)))
+        {
+            maskImage = ImageIO.read(new File(maskPath));
+        }
+        
+
         for(i=1; i<size; i+=1) {
         	if (result[i] < 0) {
                 newIndex = width * y + x - result[i];
@@ -41,7 +54,31 @@ public final class MyJSON {
                 x = newIndex - (width * y);
         	} else {
             	cantor_pair_reverse(result[i], xy);
-                data.put(new Point(x, y), new Point(xy[0], xy[1]));
+
+                
+                
+                
+                
+               
+                Color pixel = Exporter.getColor(logoImage.getRGB(xy[0], xy[1]));
+
+                int newA = pixel.getAlpha();
+                if (maskImage == null) {
+                	flag.setRGB(x, y, (new Color(pixel.getRed(), pixel.getGreen(), pixel.getBlue(), newA)).getRGB());
+                } else {
+                    int maskA = Exporter.getColor(maskImage.getRGB(x, y)).getAlpha();
+                    if (maskA != 0)
+                    {
+                        newA *= maskA / 255;
+                        flag.setRGB(x, y, (new Color(pixel.getRed(), pixel.getGreen(), pixel.getBlue(), newA)).getRGB());
+                    }
+                }
+
+                
+                
+                
+                
+                
                 x += 1;
                 if (x >= width)
                 {
@@ -49,9 +86,14 @@ public final class MyJSON {
                     y += 1;
                 }
         	}
-        } 
+        }  
         
-    	return data;
+        if (maskImage != null)
+        {
+        	maskImage.flush();
+        }
+
+    	return flag;
     }
     
     /**
