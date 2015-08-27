@@ -28,7 +28,7 @@ public final class PlutoMake {
 		if (args.length < 3) {
 			 logoPath = classDir + "tests/android.png";
 			 filename = "result.png";
-			 templateName = "card1";
+			 templateName = "coaster1";
 		} else {
 			 logoPath = args[0];
 			 filename = args[1];

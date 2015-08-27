@@ -14,7 +14,7 @@
 				"transformer" : "bilinear",
 				"filter" : "darken",
 				"mask" : "",
-				"active" : true,
+				"active" : false,
 				"extra" : [
 				],
 				"x" : 488,
@@ -39,7 +39,7 @@
 				"transformer" : "bilinear",
 				"filter" : "vividlight",
 				"mask" : "",
-				"active" : true,
+				"active" : false,
 				"extra" : [
 				],
 				"x" : 600,
@@ -64,7 +64,7 @@
 				"transformer" : "1.5orderpoly",
 				"filter" : "darken",
 				"mask" : "",
-				"active" : true,
+				"active" : false,
 				"extra" : [
 				],
 				"x" : 605,
@@ -81,7 +81,7 @@
 		"angles" : [
 			{
 				"grid" : "grid/plaingrid.png",
-				"warp" : "template/coaster1/img1/warp.png",
+				"warp" : "{\"points\":[[207,156],[952,218],[888,789],[13,694]], \"hexcolor\":\"#0085ff\"}",
 				"template" : "template/coaster1/img1/coaster1.png",
 				"result" : "template/coaster1/img1/result/",
 				"mapping" : "template/coaster1/img1/mapping.txt",
