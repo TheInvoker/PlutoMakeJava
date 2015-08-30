@@ -25,14 +25,18 @@ public final class PlutoMake {
 		String logoPath;
 		String filename;
 		String templateName;
-		if (args.length < 3) {
+		int angle_id;
+		
+		if (args.length < 4) {
 			 logoPath = classDir + "tests/android.png";
 			 filename = "result.png";
 			 templateName = "coaster1";
+			 angle_id = 1;
 		} else {
 			 logoPath = args[0];
 			 filename = args[1];
 			 templateName = args[2];
+			 angle_id = Integer.parseInt(args[3]);
 		}
         
 		// make sure the logo image exists
@@ -46,7 +50,7 @@ public final class PlutoMake {
        
         // read the logo image
     	BufferedImage logoImage = ImageIO.read(new File(logoPath));
-    	boolean worked = Process(files, templateName, filename, logoImage);
+    	boolean worked = Process(files, templateName, filename, angle_id, logoImage);
         logoImage.flush();
         
         if (!worked) {
@@ -54,7 +58,7 @@ public final class PlutoMake {
         }
 	}
 	
-	private final static boolean Process(JSONArray files, String templateName, String filename, BufferedImage logoImage) throws JSONException {
+	private final static boolean Process(JSONArray files, String templateName, String filename, int angle_id, BufferedImage logoImage) throws JSONException {
         
 		// loop through all active templates
 		JSONObject templatelistobj;
@@ -74,7 +78,7 @@ public final class PlutoMake {
 	        	for(int j=0; j<len2; j+=1) {
 		        	template = templatelist.getJSONObject(j);
 		        	
-		            if (template.getBoolean("active")) {
+		            if (template.getInt("id") == angle_id && template.getBoolean("active")) {
 		            	
 						try {
 							BatchGenerateResult(
@@ -90,14 +94,6 @@ public final class PlutoMake {
 								template.getInt("w"),  
 								template.getInt("h")
 							);
-						} catch (JSONException e) {
-							e.printStackTrace();
-							System.out.println(e.getMessage());
-							return false;
-						} catch (IOException e) {
-							e.printStackTrace();
-							System.out.println(e.getMessage());
-							return false;
 						} catch (Exception e) {
 							e.printStackTrace();
 							System.out.println(e.getMessage());

@@ -5,6 +5,7 @@
 		"description" : "test description test description test description test description test description test description test description test description test description test description test description test description test description test description test description test description test description test description test description test description",
 		"angles" : [
 			{
+				"id" : 1,
 				"grid" : "grid/multigrid.png",
 				"warp" : "template/card1/img1/warp2.png",
 				"template" : "template/card1/img1/business-card.jpg",
@@ -14,7 +15,7 @@
 				"transformer" : "bilinear",
 				"filter" : "darken",
 				"mask" : "",
-				"active" : false,
+				"active" : true,
 				"extra" : [
 				],
 				"x" : 488,
@@ -30,6 +31,7 @@
 		"description" : "test description",
 		"angles" : [
 			{
+				"id" : 1,
 				"grid" : "grid/multigrid.png",
 				"warp" : "template/bump1/img1/warp3.png",
 				"template" : "template/bump1/img1/purse.png",
@@ -39,7 +41,7 @@
 				"transformer" : "bilinear",
 				"filter" : "vividlight",
 				"mask" : "",
-				"active" : false,
+				"active" : true,
 				"extra" : [
 				],
 				"x" : 600,
@@ -55,6 +57,7 @@
 		"description" : "test description",
 		"angles" : [
 			{
+				"id" : 1,
 				"grid" : "grid/multigrid.png",
 				"warp" : "template/coffeecup1/img1/warp.png",
 				"template" : "template/coffeecup1/img1/coffee_cup.png",
@@ -64,7 +67,7 @@
 				"transformer" : "1.5orderpoly",
 				"filter" : "darken",
 				"mask" : "",
-				"active" : false,
+				"active" : true,
 				"extra" : [
 				],
 				"x" : 605,
@@ -80,8 +83,9 @@
 		"description" : "test description",
 		"angles" : [
 			{
+				"id" : 1,
 				"grid" : "grid/plaingrid.png",
-				"warp" : "{\"points\":[[207,156],[952,218],[888,789],[13,694]], \"hexcolor\":\"#0085ff\"}",
+				"warp" : "template/coaster1/img1/warp.js",
 				"template" : "template/coaster1/img1/coaster1.png",
 				"result" : "template/coaster1/img1/result/",
 				"mapping" : "template/coaster1/img1/mapping.txt",
